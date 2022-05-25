@@ -40,7 +40,7 @@ const OrderBook = () => {
     return (
       <OverlayTrigger
         key={order.id}
-        placement='auto-start'
+        placement='auto'
         overlay={<Tooltip id={order.id}>{`Click here to ${order.orderFillAction}`}</Tooltip>}
       >
         <tr key={order.id} className='order-book-order' onClick={e => fillOrder(exchange, order, account, dispatch)}>

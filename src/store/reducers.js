@@ -53,6 +53,7 @@ export const tokenReducer = (state, action) => {
 }
 
 export const exchangeReducer = (state, action) => {
+  let index, data
   switch (action.type) {
     case 'EXCHANGE_LOADED':
       return {
@@ -127,8 +128,8 @@ export const exchangeReducer = (state, action) => {
         }
       }
     case 'ORDER_FILLED':
-      let index = state.exchange.filledOrders.data.findIndex(order => order.id === action.payload.id)
-      let data = state.exchange.filledOrders.data
+      index = state.exchange.filledOrders.data.findIndex(order => order.id === action.payload.id)
+      data = state.exchange.filledOrders.data
       if (index === -1) {
         data = [
           ...state.exchange.filledOrders.data,
@@ -214,6 +215,106 @@ export const exchangeReducer = (state, action) => {
         exchange: {
           ...state.exchange,
           tokenWithdrawAmount: action.payload
+        }
+      }
+
+    case 'BUY_ORDER_AMOUNT_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          buyOrder: {
+            ...state.exchange.buyOrder,
+            amount: action.payload
+          }
+        }
+      }
+    case 'BUY_ORDER_PRICE_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          buyOrder: {
+            ...state.exchange.buyOrder,
+            price: action.payload
+          }
+        }
+      }
+    case 'BUY_ORDER_MAKING':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          buyOrder: {
+            ...state.exchange.buyOrder,
+            amount: null,
+            price: null,
+            making: true
+          }
+        }
+      }
+
+    case 'SELL_ORDER_AMOUNT_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          sellOrder: {
+            ...state.exchange.sellOrder,
+            amount: action.payload
+          }
+        }
+      }
+    case 'SELL_ORDER_PRICE_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          sellOrder: {
+            ...state.exchange.sellOrder,
+            price: action.payload
+          }
+        }
+      }
+    case 'SELL_ORDER_MAKING':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          sellOrder: {
+            ...state.exchange.sellOrder,
+            amount: null,
+            price: null,
+            making: true
+          }
+        }
+      }
+
+    case 'ORDER_MADE':
+      //  prevent duplicate orders
+      index = state.exchange.orders.data.findIndex(order => order.id === action.payload.id)
+
+      data = state.exchange.orders.data
+      if (index === -1) {
+        data = [...state.exchange.orders.data, action.payload]
+      }
+
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          orders: {
+            ...state.exchange.orders,
+            data: data
+          },
+          buyOrder: {
+            ...state.exchange.buyOrder,
+            making: false
+          },
+          sellOrder: {
+            ...state.exchange.sellOrder,
+            making: false
+          }
         }
       }
     default:

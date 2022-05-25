@@ -39,7 +39,7 @@ module.exports = async function(cb) {
 
     // set up exchange
     // user 1 deposits ether
-    amount = 1
+    amount = 0.001
     await exchange.depositEther({ from: user1, value: ether(amount) })
     console.log(`Deposited ${amount} Ether from ${user1}`)
 
@@ -59,7 +59,7 @@ module.exports = async function(cb) {
     // user 1 makes an order to get tokens
     let result
     let orderId
-    result = await exchange.makeOrder(token.address, tokens(100), ETHER_ADDRESS, ether(0.1), { from: user1 })
+    result = await exchange.makeOrder(token.address, tokens(100), ETHER_ADDRESS, ether(0.001), { from: user1 })
     console.log(`Made order from ${user1}`)
 
     // user 1 cancels order
@@ -72,7 +72,7 @@ module.exports = async function(cb) {
     //
 
     // User 1 makes an order
-    result = await exchange.makeOrder(token.address, tokens(100), ETHER_ADDRESS, ether(0.1), { from: user1 })
+    result = await exchange.makeOrder(token.address, tokens(100), ETHER_ADDRESS, ether(0.001), { from: user1 })
     console.log(`Made order from ${user1}`)
     // User 2 fills order
     orderId = result.logs[0].args.id
@@ -82,7 +82,7 @@ module.exports = async function(cb) {
     await wait(1)
 
     // User 1 makes an order
-    result = await exchange.makeOrder(token.address, tokens(50), ETHER_ADDRESS, ether(0.01), { from: user1 })
+    result = await exchange.makeOrder(token.address, tokens(50), ETHER_ADDRESS, ether(0.0001), { from: user1 })
     console.log(`Made order from ${user1}`)
     // User 2 fills order
     orderId = result.logs[0].args.id
@@ -92,7 +92,7 @@ module.exports = async function(cb) {
     await wait(1)
 
     // User 1 makes an order
-    result = await exchange.makeOrder(token.address, tokens(200), ETHER_ADDRESS, ether(0.15), { from: user1 })
+    result = await exchange.makeOrder(token.address, tokens(200), ETHER_ADDRESS, ether(0.00015), { from: user1 })
     console.log(`Made order from ${user1}`)
     // User 2 fills order
     orderId = result.logs[0].args.id
@@ -107,7 +107,7 @@ module.exports = async function(cb) {
 
     // user 1 makes 10 orders
     for (let i = 1; i <= 10; i++) {
-      result = await exchange.makeOrder(token.address, tokens(10*i), ETHER_ADDRESS, ether(0.01), { from: user1 })
+      result = await exchange.makeOrder(token.address, tokens(10*i), ETHER_ADDRESS, ether(0.0001), { from: user1 })
       console.log(`Made order from ${user1}`)
       // wait 1 second
       await wait(1)
@@ -115,7 +115,7 @@ module.exports = async function(cb) {
 
     // user 2 makes 10 orders
     for (let i = 1; i <= 10; i++) {
-      result = await exchange.makeOrder(ETHER_ADDRESS, ether(0.01), token.address, tokens(10 * i), { from: user2 })
+      result = await exchange.makeOrder(ETHER_ADDRESS, ether(0.0001), token.address, tokens(10 * i), { from: user2 })
       console.log(`Made order from ${user2}`)
       // wait 1 second
       await wait(1)

@@ -79,6 +79,12 @@ export const subscribeToEvents = async (exchange, dispatch) => {
   exchange.events.Deposit({}, (error, event) => {
     // dispatch({ type: 'BALANCES_LOADED' })
   })
+  exchange.events.Withdraw({}, (error, event) => {
+    // dispatch({ type: 'BALANCES_LOADED' })
+  })
+  exchange.events.Order({}, (error, event) => {
+    dispatch({ type: 'ORDER_MADE', payload: event.returnValues })
+  })
 }
 
 export const cancelOrder = (exchange, order, account, dispatch) => {
@@ -171,6 +177,42 @@ export const withdrawToken = (conn, exchange, token, account, amount, dispatch) 
     .on('transactionHash', (hash) => {
       dispatch({ type: 'BALANCES_LOADING' })
       loadBalances(conn, exchange, token, account, dispatch)
+    })
+    .on('error', (error) => {
+      console.log(error)
+      window.alert('There was an error!')
+    })
+}
+
+export const makeBuyOrder = (conn, exchange, token, account, order, dispatch) => {
+  const tokenGet = token.options.address
+  const amountGet = Web3.utils.toWei(order.amount.toString(), 'ether')
+  const tokenGive = ETHER_ADDRESS
+  const amountGive = Web3.utils.toWei((order.amount * order.price).toString(), 'ether')
+
+  exchange.methods.makeOrder(tokenGet, amountGet, tokenGive, amountGive).send({ from: account })
+    .on('transactionHash', (hash) => {
+      dispatch({ type: 'BUY_ORDER_MAKING' })
+      // dispatch({ type: 'BALANCES_LOADING' })
+      // loadBalances(conn, exchange, token, account, dispatch)
+    })
+    .on('error', (error) => {
+      console.log(error)
+      window.alert('There was an error!')
+    })
+}
+
+export const makeSellOrder = (conn, exchange, token, account, order, dispatch) => {
+  const tokenGet = ETHER_ADDRESS
+  const amountGet = Web3.utils.toWei((order.amount * order.price).toString(), 'ether')
+  const tokenGive = token.options.address
+  const amountGive = Web3.utils.toWei(order.amount.toString(), 'ether')
+
+  exchange.methods.makeOrder(tokenGet, amountGet, tokenGive, amountGive).send({ from: account })
+    .on('transactionHash', (hash) => {
+      dispatch({ type: 'SELL_ORDER_MAKING' })
+      // dispatch({ type: 'BALANCES_LOADING' })
+      // loadBalances(conn, exchange, token, account, dispatch)
     })
     .on('error', (error) => {
       console.log(error)
