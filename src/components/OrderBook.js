@@ -1,13 +1,26 @@
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useAppState } from '../contexts/AppState'
+import { fillOrder } from '../store'
 
-import { orderBookSelector, orderBookLoadedSelector } from '../store/selectors'
+import {
+  orderBookSelector,
+  orderBookLoadedSelector,
+  exchangeSelector,
+  accountSelector,
+  orderFillingSelector} from '../store/selectors'
 import Spinner from './Spinner'
 
 const OrderBook = () => {
-  const [state] = useAppState()
+  const [state, dispatch] = useAppState()
 
-  const orderBook = orderBookSelector(state)
   const orderBookLoaded = orderBookLoadedSelector(state)
+  const orderBook = orderBookSelector(state)
+  const orderFilling = orderFillingSelector(state)
+
+  const exchange = exchangeSelector(state)
+  const account = accountSelector(state)
+
+  let showBook = orderBookLoaded && !orderFilling
 
   const showOrderBook = () => {
     return (
@@ -25,11 +38,17 @@ const OrderBook = () => {
 
   const renderOrder = order => {
     return (
-      <tr key={order.id}>
-        <td>{order.tokenAmount}</td>
-        <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
-        <td>{order.etherAmount}</td>
-      </tr>
+      <OverlayTrigger
+        key={order.id}
+        placement='auto-start'
+        overlay={<Tooltip id={order.id}>{`Click here to ${order.orderFillAction}`}</Tooltip>}
+      >
+        <tr key={order.id} className='order-book-order' onClick={e => fillOrder(exchange, order, account, dispatch)}>
+          <td>{order.tokenAmount}</td>
+          <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
+          <td>{order.etherAmount}</td>
+        </tr>
+      </OverlayTrigger>
     )
   }
 
@@ -39,7 +58,7 @@ const OrderBook = () => {
         <div className='card-header'>Order Book</div>
         <div className='card-body'>
           <table className='table table-dark table-sm small'>
-            {orderBookLoaded ? showOrderBook() : <Spinner type={'table'} />}
+            {showBook ? showOrderBook() : <Spinner type={'table'} />}
           </table>
         </div>
       </div>

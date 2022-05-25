@@ -25,7 +25,6 @@ const App = () => {
     const web3 = loadWeb3(dispatch)
     // const network = await web3.eth.net.getNetworkType()
     const networkId = await web3.eth.net.getId()
-    console.log(networkId)
     await loadAccount(web3, dispatch)
 
     const token = await loadToken(web3, networkId, dispatch)
@@ -41,8 +40,6 @@ const App = () => {
     }
 
     const totalSupply = await token.methods.totalSupply().call()
-    console.log('total supply: ', totalSupply)
-    console.log(state)
   }
 
   return (

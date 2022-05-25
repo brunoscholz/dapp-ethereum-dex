@@ -2,7 +2,8 @@ export const initialState = {
   web3: null,
   account: null,
   token: null,
-  exchange: null
+  exchange: null,
+  wallet: null
 }
 
 export const web3Reducer = (state, action) => {
@@ -17,6 +18,11 @@ export const web3Reducer = (state, action) => {
         ...state,
         account: action.payload
       }
+    case 'ETHER_BALANCE_LOADED':
+      return {
+        ...state,
+        balance: action.payload
+      }
     default:
       return state
   }
@@ -28,11 +34,19 @@ export const tokenReducer = (state, action) => {
       return {
         ...state,
         token: {
+          ...state.token,
           loaded: true,
           contract: action.payload
         }
       }
-
+    case 'TOKEN_BALANCE_LOADED':
+      return {
+        ...state,
+        token: {
+          ...state.token,
+          balance: action.payload
+        }
+      }
     default:
       return state
   }
@@ -81,7 +95,127 @@ export const exchangeReducer = (state, action) => {
           }
         }
       }
+    case 'ORDER_CANCELLING':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          orderCancelling: true
+        }
+      }
+    case 'ORDER_CANCELLED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          orderCancelling: false,
+          cancelledOrders: {
+            ...state.exchange.cancelledOrders,
+            data: [
+              ...state.exchange.cancelledOrders.data,
+              action.payload
+            ]
+          }
+        }
+      }
+    case 'ORDER_FILLING':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          orderFilling: true
+        }
+      }
+    case 'ORDER_FILLED':
+      let index = state.exchange.filledOrders.data.findIndex(order => order.id === action.payload.id)
+      let data = state.exchange.filledOrders.data
+      if (index === -1) {
+        data = [
+          ...state.exchange.filledOrders.data,
+          action.payload
+        ]
+      }
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          orderFilling: false,
+          filledOrders: {
+            ...state.exchange.filledOrders,
+            data: data
+          }
+        }
+      }
 
+    case 'EXCHANGE_ETHER_BALANCE_LOADED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          etherBalance: action.payload
+        }
+      }
+
+    case 'EXCHANGE_TOKEN_BALANCE_LOADED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          tokenBalance: action.payload
+        }
+      }
+
+    case 'BALANCES_LOADED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          balancesLoading: false
+        }
+      }
+
+    case 'BALANCES_LOADING':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          balancesLoading: true
+        }
+      }
+
+    case 'ETHER_DEPOSIT_AMOUNT_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          etherDepositAmount: action.payload
+        }
+      }
+    case 'ETHER_WITHDRAW_AMOUNT_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          etherWithdrawAmount: action.payload
+        }
+      }
+
+    case 'TOKEN_DEPOSIT_AMOUNT_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          tokenDepositAmount: action.payload
+        }
+      }
+    case 'TOKEN_WITHDRAW_AMOUNT_CHANGED':
+      return {
+        ...state,
+        exchange: {
+          ...state.exchange,
+          tokenWithdrawAmount: action.payload
+        }
+      }
     default:
       return state
   }

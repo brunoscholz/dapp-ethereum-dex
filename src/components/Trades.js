@@ -4,15 +4,15 @@ import { filledOrdersSelector, filledOrdersLoadedSelector } from '../store/selec
 import Spinner from './Spinner'
 
 const Trades = () => {
-  const [ state ] = useAppState()
+  const [state] = useAppState()
 
-  const filledOrders = filledOrdersSelector(state)
   const filledOrdersLoaded = filledOrdersLoadedSelector(state)
+  const filledOrders = filledOrdersSelector(state)
 
   const showFilledOrders = () => {
     return (
       <tbody>
-        {filledOrders.map((order) => {
+        {filledOrders.map(order => {
           return (
             <tr key={order.id} className={`order-${order.id}`}>
               <th className='text-muted'>{order.formatedTimestamp}</th>

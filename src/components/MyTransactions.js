@@ -5,17 +5,27 @@ import {
   myFilledOrdersLoadedSelector,
   myFilledOrdersSelector,
   myOpenOrdersLoadedSelector,
-  myOpenOrdersSelector
+  myOpenOrdersSelector,
+  accountSelector,
+  exchangeSelector,
+  orderCancellingSelector
 } from '../store/selectors'
 import Spinner from './Spinner'
+import { cancelOrder } from '../store/actions'
 
 const MyTransactions = () => {
-  const [state] = useAppState()
+  const [state, dispatch] = useAppState()
 
   const myFilledOrders = myFilledOrdersSelector(state)
   const myFilledOrdersLoaded = myFilledOrdersLoadedSelector(state)
   const myOpenOrders = myOpenOrdersSelector(state)
   const myOpenOrdersLoaded = myOpenOrdersLoadedSelector(state)
+  const orderCancelling = orderCancellingSelector(state)
+
+  let showOpenOrders = myOpenOrdersLoaded && !orderCancelling
+
+  const account = accountSelector(state)
+  const exchange = exchangeSelector(state)
 
   const showMyFilledOrders = () => {
     return (
@@ -44,7 +54,12 @@ const MyTransactions = () => {
             <tr key={order.id}>
               <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
               <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
-              <th className='text-muted'>x</th>
+              <th
+                className='text-muted cancel-order'
+                onClick={(e) => cancelOrder(exchange, order, account, dispatch)}
+              >
+                X
+              </th>
             </tr>
           )
         })}
@@ -78,7 +93,7 @@ const MyTransactions = () => {
                   <th>Cancel</th>
                 </tr>
               </thead>
-              {myOpenOrdersLoaded ? showMyOpenOrders() : <Spinner type="table" />}
+              {showOpenOrders ? showMyOpenOrders() : <Spinner type="table" />}
             </table>
           </Tab>
         </Tabs>
