@@ -1,13 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import 'bootstrap/dist/css/bootstrap.css';
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
+
+import { initialState, combineReducers } from './store'
+import { AppStateProvider } from './contexts/AppState'
+
+import { web3Reducer, tokenReducer, exchangeReducer } from './store'
+
+const appReducers = combineReducers({
+  web3: web3Reducer,
+  token: tokenReducer,
+  exchange: exchangeReducer
+})
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <AppStateProvider reducer={appReducers} initialState={initialState}>
+      <App />
+    </AppStateProvider>
   </React.StrictMode>
 );
 
