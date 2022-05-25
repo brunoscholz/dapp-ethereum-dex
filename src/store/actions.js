@@ -16,7 +16,7 @@ export function web3AccountLoaded(account) {
   }
 }
 
-export const loadWeb3 = (dispatch) => {
+export const loadWeb3 = dispatch => {
   // const web3 = new Web3(Web3.givenProvider || 'ws://localhost:7545')
   const web3 = new Web3('ws://localhost:7545')
   dispatch({ type: 'WEB3_LOADED', payload: web3 })
@@ -35,7 +35,7 @@ export const loadToken = async (web3, networkId, dispatch) => {
     dispatch({ type: 'TOKEN_LOADED', payload: token })
     return token
   } catch (error) {
-    window.alert('Contract not deployed to the current network. Please select another network with metamask')
+    console.log('Contract not deployed to the current network. Please select another network with metamask')
     return null
   }
 }
@@ -46,7 +46,24 @@ export const loadExchange = async (web3, networkId, dispatch) => {
     dispatch({ type: 'EXCHANGE_LOADED', payload: exchange })
     return exchange
   } catch (error) {
-    window.alert('Contract not deployed to the current network. Please select another network with metamask')
+    console.log('Contract not deployed to the current network. Please select another network with metamask')
     return null
   }
+}
+
+export const loadAllOrders = async (exchange, dispatch) => {
+  // fetch cancelled orders with the 'Cancel' event stream
+  const cancelStream = await exchange.getPastEvents('Cancel', { fromBlock: 0, toBlock: 'latest' })
+  const cancelledOrders = cancelStream.map(event => event.returnValues)
+  dispatch({ type: 'CANCELLED_ORDERS_LOADED', payload: cancelledOrders })
+
+  // fetch filled orders with the 'Trade' event stream
+  const tradeStream = await exchange.getPastEvents('Trade', { fromBlock: 0, toBlock: 'latest' })
+  const filledOrders = tradeStream.map(event => event.returnValues)
+  dispatch({ type: 'FILLED_ORDERS_LOADED', payload: filledOrders })
+
+  // fetch all orders with the 'Order' event stream
+  const orderStream = await exchange.getPastEvents('Order', { fromBlock: 0, toBlock: 'latest' })
+  const allOrders = orderStream.map(event => event.returnValues)
+  dispatch({ type: 'ALL_ORDERS_LOADED', payload: allOrders })
 }
