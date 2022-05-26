@@ -19,11 +19,39 @@ module.exports = {
           `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`
         )
       },
-      gas: 66380,
+      gas: 116625,
       gasPrice: 10000000000,
       network_id: 42,
       confirmations: 2,    // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+    rinkeby: {
+      provider: function() {
+        return new HDWalletProvider(
+          privateKeys.split(','),
+          `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`
+        )
+      },
+      gas: 116625,
+      gasPrice: 10000000000,
+      network_id: 4,
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+    goerli: {
+      provider: function() {
+        return new HDWalletProvider(
+          privateKeys.split(','),
+          `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`
+        )
+      },
+      // gas: 29999972,
+      // gasPrice: 100000000,
+      network_id: 5,
+      // confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      // timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
       skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     }
   },
