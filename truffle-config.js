@@ -19,8 +19,8 @@ module.exports = {
           `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`
         )
       },
-      gas: 5000000,
-      gasPrice: 25000000000,
+      gas: 30000,
+      gasPrice: 10000000000,
       network_id: 42,
       confirmations: 2,    // # of confs to wait between deployments. (default: 0)
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
