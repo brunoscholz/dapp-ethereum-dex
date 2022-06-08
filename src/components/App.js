@@ -29,13 +29,13 @@ const App = () => {
 
     const token = await loadToken(web3, networkId, dispatch)
     if (!token) {
-      window.alert('Token smart contract not detected in the current network.')
+      window.alert('Token smart contract not detected in the current network. Change your metamask network to Goerli Test; the token is deployed there!')
       return
     }
 
     const exchange = await loadExchange(web3, networkId, dispatch)
     if (!exchange) {
-      window.alert('Exchange smart contract not detected in the current network.')
+      window.alert('Exchange smart contract not detected in the current network. Change your metamask network to Goerli Test; the exchange is deployed there!')
       return
     }
 
