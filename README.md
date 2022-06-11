@@ -1,6 +1,6 @@
 # Live preview
 
-[Descentralized Token Exchange](https://dapp-bootcamp1.herokuapp.com/). You need metamask wallet / browser extension with some Ether on Goerli Test Network.
+[Decentralized Token Exchange](https://dapp-bootcamp1.herokuapp.com/). You need metamask wallet / browser extension with some Ether on Goerli Test Network.
 
 ## Running the Project
 
